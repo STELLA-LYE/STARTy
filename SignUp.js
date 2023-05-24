@@ -149,7 +149,7 @@ const pickerSelectStyles = StyleSheet.create({
     borderColor: '#777',
     borderRadius: 8,
     backgroundColor: '#f6f6f6',
-    paddingRight: 10,
+    //paddingRight: 10,
     marginBottom: 20,
     margin: 10,
   },
