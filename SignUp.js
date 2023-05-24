@@ -5,6 +5,8 @@ import { Avatar } from "react-native-elements";
 import * as Font from 'expo-font'; 
 import { useFonts } from 'expo-font';
 import RNPickerSelect from "react-native-picker-select";
+import { collection, doc, setDoc, addDoc } from "firebase/firestore"; 
+import { db } from './components/config'; 
 
 export default function SignUp() {
   const [name, setName] = useState(''); 
@@ -15,7 +17,29 @@ export default function SignUp() {
   const[fontsLoaded] = useFonts({
     RowdiesRegular: require('./assets/fonts/Rowdies-Regular.ttf')
   }); 
+
+  if (!fontsLoaded) {
+    return null; 
+  }
   
+  function create () {
+
+    //submit data
+    addDoc(collection(db, "users"), {
+      name: name, 
+      gender: gender, 
+      major: major, 
+      year: year,       
+    }).then(() => {
+      //Data saved successfully!
+      console.log('data submitted'); 
+
+    }).catch((error) => {
+      //the write failed...
+      console.log(error); 
+    });;
+  }
+
   return (
 
     <View style={styles.container}>
@@ -81,7 +105,8 @@ export default function SignUp() {
 
       <Text style={styles.result}>name: {name}, gender: {gender}, major: {major}, year: {year}</Text>
 
-      <FlatButton text='Sign Up' />
+      {/* <FlatButton text='Sign Up' /> */}
+      <FlatButton onPress={create}></FlatButton>
     
     </View>
   );
@@ -106,9 +131,9 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   }, 
   logo: {
-    width: 80,
-    height: 80,
-    borderRadius: 80 / 2,
+    width: 100,
+    height: 100,
+    borderRadius: 100 / 2,
     backgroundColor: '#007788', 
     alignItems: 'center',
     marginBottom: 20,
