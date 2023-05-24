@@ -7,10 +7,10 @@ import { useFonts } from 'expo-font';
 import RNPickerSelect from "react-native-picker-select";
 
 export default function SignUp() {
-  const [name, setName] = useState('shaun'); 
-  const [gender, setGender] = useState('Female'); 
-  const [major, setMajor] = useState('Science'); 
-  const [year, setYear] = useState('2'); 
+  const [name, setName] = useState(''); 
+  const [gender, setGender] = useState(''); 
+  const [major, setMajor] = useState(''); 
+  const [year, setYear] = useState(''); 
 
   const[fontsLoaded] = useFonts({
     RowdiesRegular: require('./assets/fonts/Rowdies-Regular.ttf')
