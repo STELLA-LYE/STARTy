@@ -64,7 +64,7 @@ const styles = StyleSheet.create({
   },
   picker: {
     flex: 1,
-    maxWidth: 50,
+    // maxWidth: 50,
     ...Platform.select({
       android: {
         color: "#fff",
