@@ -91,14 +91,89 @@ export default function Register() {
 
         />
         
-        <Input
+        {/* <Input
         placeholder='Enter your gender (F/M/NIL)'
         label='Gender'
         value={gender}
         style={styles.input}
         onChangeText={text => setGender(text)}
         leftIcon={{type:'material', name:'supervised-user-circle', color: '#007788'}}
-        />
+        /> */}
+
+    <View style={{flexDirection: 'row', justifyContent: 'space-between'}}> 
+      <Text style={{
+      position: 'relative',
+      marginRight: 20, 
+    }}>Select Your Gender:</Text>
+
+    <Text style={{
+      position: 'relative',
+      left: 12,
+    }}>Select Your Year:</Text>
+    </View>
+
+    <View style={{flexDirection: 'row', justifyContent: 'space-between'}}> 
+    <Picker style={{
+          borderColor: '#777',
+          backgroundColor: '#f6f6f6',
+          height: 150, 
+          width: 200, 
+          marginBottom: 20, 
+        }}
+            selectedValue={gender}
+            onValueChange={(itemValue, itemIndex) =>
+            setGender(itemValue)
+            }
+            mode="dropdown"
+            >
+        <Picker.Item label="F" value="F" />
+        <Picker.Item label="M" value="M" />
+        <Picker.Item label="NIL" value="NIL" />
+        </Picker>
+
+        <Picker style={{
+            borderColor: '#777',
+            backgroundColor: '#f6f6f6',
+            height: 150, 
+            width: 200, 
+            marginBottom: 20, 
+        }}
+            selectedValue={year}
+            onValueChange={(itemValue, itemIndex) =>
+            setYear(itemValue)
+            }
+            // mode="dropDown"
+            >
+        <Picker.Item label="1" value="1" />
+        <Picker.Item label="2" value="2" />
+        <Picker.Item label="3" value="3" />
+        <Picker.Item label="4" value="4" />
+        <Picker.Item label="5" value="5" />
+        <Picker.Item label="6 and above" value="6 and above"/>
+        </Picker>
+         </View>
+
+         <View style={{flexDirection: 'row', justifyContent: 'space-between'}}> 
+         <Text style={{
+          backgroundColor: '#f6f6f6',
+          borderColor: '#777',
+          padding: 8,
+          margin: 10,
+          width: 150,
+          height: 40, 
+          marginBottom: 20,
+         }} > Gender: {gender} </Text>
+
+          <Text style={{
+          backgroundColor: '#f6f6f6',
+          borderColor: '#777',
+          padding: 8,
+          margin: 10,
+          width: 150,
+          height: 40, 
+          marginBottom: 20,
+         }} > Year: {year} </Text>
+        </View>
 
         <Input
         placeholder='Enter your major'
@@ -109,14 +184,14 @@ export default function Register() {
         leftIcon={{type:'material', name:'menu-book', color: '#007788'}}
         />
 
-        <Input
+        {/* <Input
         placeholder='Enter your year'
         label='year'
         value={year}
         style={styles.input}
         onChangeText={text =>setYear(text)}
         leftIcon={{type:'material', name:'calendar-today', color: '#007788'}}
-        />
+        /> */}
 
         <Input
         placeholder='Enter your email'
@@ -162,7 +237,6 @@ const styles = StyleSheet.create({
         //left: 108,
         flexDirection: 'column',
         justifyContent: 'center',
-        // marginTop: 10,
         width: 200,
         height: 50, 
         marginBottom: 10, 
@@ -180,7 +254,7 @@ const styles = StyleSheet.create({
         //borderColor: '#777',
         padding: 10,
         borderRadius: 10,
-        margin: 10,
+        margin: 5,
         //width: 300,
         //marginBottom: 20,
         marginHorizontal: 20,

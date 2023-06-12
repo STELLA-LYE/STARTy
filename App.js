@@ -10,6 +10,7 @@ import Home from './src/screens/Home';
 import Chat from './src/screens/Chat'; 
 import Welcome from './src/screens/Welcome'; 
 import MainTabs from './src/navigation/MainTab';
+import Verify from './src/components/Tasks/Verify'
 
 
 const Stack = createNativeStackNavigator();
@@ -55,10 +56,12 @@ export default function App() {
                 title:route.params.name,
                 headerTitleStyle:{fontWeight:'bold'},
                 headerTitleAlign:'center'
-
-
                })}
                />
+               <Stack.Screen
+                 name='Verify'
+                 component={Verify}
+                 />
 
         </Stack.Navigator>
                 

@@ -1,18 +1,3 @@
-// import { View, Text } from 'react-native'
-// import React from 'react'
-
-// const FocusTimer = () => {
-//   return (
-//     <View>
-//       <Text>FocusTimer</Text>
-//     </View>
-//   )
-// }
-
-// export default FocusTimer
-
-//Code for Timer which users can set their own time 
-
 import React, {Component} from "react";
 import {
   StyleSheet,
@@ -21,8 +6,7 @@ import {
   Dimensions,
   StatusBar,
   TouchableOpacity,
-  Platform, 
-  Alert, 
+  Platform
 } from "react-native";
 
 import {Picker} from "@react-native-picker/picker";
@@ -64,7 +48,7 @@ const styles = StyleSheet.create({
   },
   picker: {
     flex: 1,
-    // maxWidth: 50,
+    maxWidth: 100,
     ...Platform.select({
       android: {
         color: "#fff",
@@ -91,10 +75,9 @@ const styles = StyleSheet.create({
 const formatNumber = number => `0${number}` . slice(-2);
 
 const getRemaining = time => {
-  const hours = Math.floor(time / 3600); 
-  const minutes = Math.floor((time - hours * 3600) / 60);
-  const seconds = time - minutes * 60 - hours * 3600;
-  return {hours: formatNumber(hours), minutes: formatNumber(minutes), seconds: formatNumber(seconds)}
+  const minutes = Math.floor(time / 60);
+  const seconds = time - minutes * 60;
+  return {minutes: formatNumber(minutes), seconds: formatNumber(seconds)}
 }
 
 const createArray = length => {
@@ -107,8 +90,7 @@ const createArray = length => {
   return arr;
 }
 
-const AVAILABLE_HOURS = createArray(10);
-const AVAILABLE_MINUTES = createArray(60);
+const AVAILABLE_MINUTES = createArray(600);
 const AVAILABLE_SECONDS = createArray(60);
 
 
@@ -118,8 +100,7 @@ export default class FocusTimer extends Component{
     remainingSeconds: 5,
     isRunning: false,
     selectedMinutes: "0",
-    selectedSeconds: "5", 
-    selectedHours: "0", 
+    selectedSeconds: "5"
   }
 
   interval = null;
@@ -127,9 +108,6 @@ export default class FocusTimer extends Component{
   componentDidUpdate = (prevProp, prevState) => {
     if(this.state.remainingSeconds === 0 && prevState.remainingSeconds !== 0){
       this.stop();
-      Alert.alert('Timer end', 'Time is up!', [
-        {text: 'Understood', onPress: () => console.log('alert closed')}
-      ]); 
     }
   }
 
@@ -142,7 +120,6 @@ export default class FocusTimer extends Component{
   start = () => {
     this.setState(state => ({
       remainingSeconds: 
-        parseInt(state.selectedHours, 10) * 60 * 60 +
         parseInt(state.selectedMinutes, 10) * 60 +
         parseInt(state.selectedSeconds, 30),
         isRunning: true
@@ -165,25 +142,6 @@ export default class FocusTimer extends Component{
 
   renderPickers = () => (
     <View style={styles.pickerContainer}>
-
-      <Picker
-        style={styles.picker}
-        itemStyle={styles.pickerItem}
-        selectedValue={this.state.selectedHours}
-        onValueChange={itemValue => {
-          this.setState({selectedHours: itemValue});
-        }}
-        mode="dropDown"
-      > 
-        {
-          AVAILABLE_HOURS.map(value => (
-            <Picker.Item key={value} label={value} value={value} />
-          ))
-        }
-      </Picker>
-      <Text style={styles.pickerItem}>hours</Text>
-
-
       <Picker
         style={styles.picker}
         itemStyle={styles.pickerItem}
@@ -220,13 +178,13 @@ export default class FocusTimer extends Component{
   );
 
   render(){
-    const {hours, minutes, seconds} = getRemaining(this.state.remainingSeconds);
+    const {minutes, seconds} = getRemaining(this.state.remainingSeconds);
     return(
       <View style={styles.container}>
         <StatusBar barStyle="light-content" />
         {
           this.state.isRunning ? (
-            <Text style={styles.timerText}>{`${hours}:${minutes}:${seconds}`}</Text>
+            <Text style={styles.timerText}>{`${minutes}:${seconds}`}</Text>
           ) : (
             this.renderPickers()
           )

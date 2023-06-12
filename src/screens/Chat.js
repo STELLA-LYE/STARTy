@@ -1,8 +1,11 @@
-import { StyleSheet, Text, View, Button} from 'react-native'
+import { StyleSheet, Text, View, Button, ScrollView, TouchableOpacity} from 'react-native'
 import React, { useState, useCallback, useEffect } from 'react'
-import { GiftedChat } from 'react-native-gifted-chat'
+import { GiftedChat, Bubble, Send} from 'react-native-gifted-chat'
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { addDoc, collection, serverTimestamp , doc, onSnapshot, query, orderBy} from 'firebase/firestore';
 import { db, authentication} from '../../config';
+// import { color } from 'react-native-reanimated';
 
 export default function Chat({route, navigation}) {
   const uid = route.params.uid
@@ -76,13 +79,61 @@ export default function Chat({route, navigation}) {
     })
 
   }, [])
+
+  const scrollToBottomComponent = () => {
+    return(
+      <FontAwesome name='angle-double-down' size={22} color='#333' />
+    );
+  }
+
+  const renderSend = (props) => {
+    return (
+      <Send {...props}>
+        <View>
+          <MaterialCommunityIcons
+            name="send-circle"
+            style={{marginBottom: 5, marginRight: 5}}
+            size={32}
+            color="#007788"
+          />
+        </View>
+      </Send>
+    );
+  };
+
+  const renderBubble = (props) => {
+    return (
+      <Bubble
+        {...props}
+        wrapperStyle={{
+          right: {
+            backgroundColor: '#007788',
+          },
+        }}
+        textStyle={{
+          right: {
+            color: '#fff',
+          },
+        }}
+      />
+    );
+  };
+
+
   return (
     <View style={styles.container}>
 
-      <Button
-        onPress={() => navigation.navigate('Home')}
+      {/* <Button style={styles.button}
+        onPress={() => navigation.navigate('MainTabs')}
         title='back'
-        />
+        /> */}
+
+      <TouchableOpacity onPress={() => navigation.navigate('MainTabs')}>
+            <View style={styles.button}>
+                <Text style={styles.buttonText}>back</Text>
+            </View>
+        </TouchableOpacity>
+
 
     <GiftedChat
       messages={messages}
@@ -93,6 +144,11 @@ export default function Chat({route, navigation}) {
         _id: currentUser,
         avatar: userAvatar, 
       }}
+      renderSend={renderSend}
+      renderBubble={renderBubble}
+      alwaysShowSend
+      scrollToBottom
+      scrollToBottomComponent={scrollToBottomComponent}
     />
 
     </View>
@@ -102,9 +158,26 @@ export default function Chat({route, navigation}) {
 
 const styles = StyleSheet.create({
   container:{
-      flex:1
+      flex:1, 
+      backgroundColor: '#eef1e1', 
+      marginBottom: 20, 
   },
-  btn:{
-      marginTop:10
-  }
+  button: {
+    borderRadius: 100,
+    backgroundColor: '#5372F0',
+    //position: 'centre',
+    //left: 108,
+    justifyContent: 'center',
+    width: 80,
+    height: 40, 
+    marginBottom: 10, 
+    marginLeft: 175, 
+  },
+  buttonText: {
+    color: '#f6f6f6',
+    fontWeight: 'bold',
+    // fontFamily: 'RowdiesRegular', 
+    fontSize: 18,
+    textAlign: 'center',
+  },
 })
