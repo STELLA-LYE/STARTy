@@ -54,7 +54,8 @@ const ProfileCard = ({ navigation }) => {
             borderColor: '#007788',
             //borderRadius: 10,
             //backgroundColor: '#',
-        }}>
+        }}
+        testID='profileCard'>
 
             <View style={{
                 //backgroundColor: 'pink',
