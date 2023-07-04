@@ -1,59 +1,78 @@
 import { FlatList, StyleSheet, Text, View, Image, TouchableOpacity} from 'react-native'
 import React, { useEffect, useState } from 'react'
-import { collection, onSnapshot, where, query } from 'firebase/firestore'
-import { authentication, db } from '../../config'
-import { ListItem } from '../components/Chat/Listitem'
-import { Button } from 'react-native-elements';
+// import { collection, onSnapshot, where, query } from 'firebase/firestore'
+// import { authentication, db } from '../../config'
+import { ListItem } from '../components/tasks/listItem'
 
 export default function Home({navigation}) {
   const [users, setUsers] = useState([]);
 
   const logoutUser = async () => {
-    authentication.signOut()
-    .then(() => {
-      navigation.replace('Login')
-    })
+    // authentication.signOut()
+    // .then(() => {
+      // navigation.replace('Login')
+      navigation.navigate('Login')
+    // })
   }
  
-  const getUsers =  () => {
-    const docsRef = collection(db, 'users');
-    const q =  query(docsRef, where('userUID', '!=', authentication?.currentUser?.uid ));
-    const docsSnap = onSnapshot(q, (onSnap) => {
-      let data = [];
-      onSnap.docs.forEach(user => {
-        data.push({...user.data()})
-        setUsers(data)
-        console.log(user.data())
-        
-      })
-    })
-  }
-  useEffect(() => {
-    getUsers();
-  },[])
+  // const getUsers =  () => {
+  //   const docsRef = collection(db, 'focusSession', authentication.currentUser.email, 'partners');
+  //   const q =  query(docsRef, where('active', '==', true));
+  //   const docsSnap = onSnapshot(q, (onSnap) => {
+  //     let data = [];
+  //     onSnap.docs.forEach(async user => {
+  //       data.push({...user.data()})
+  //       setUsers(data)      
+  //     })
+  //   })
+  // }
+
+  // useEffect(() => {
+  //   getUsers();
+  //   console.log(users);
+  // },[])
 
 
   return (
-    <View style={styles.container}>
+    <View style={styles.container} testID='home'>
     <>
-      <TouchableOpacity onPress={logoutUser}>
+      <TouchableOpacity onPress={logoutUser} testID='logoutButton'>
           <View style={styles.button}>
               <Text style={styles.buttonText}>Logout</Text>
           </View>
       </TouchableOpacity>
 
+      <TouchableOpacity  onPress={() => navigation.navigate('Task')} testID='tasksButton'>
+          <View style={styles.button}>
+              <Text style={styles.buttonText}> {users} </Text>
+          </View>
+      </TouchableOpacity>
+
+      {/* <View style={styles.empty}>
+        <Text style={styles.emptyText}>Send your evidence here!</Text>
+      </View> */}
+
       <FlatList
       data={users}
       key={user => user.email}
       renderItem={({item}) => 
-      <ListItem 
-      onPress={() => navigation.navigate('Chat', {name:item.name, uid:item.userUID, userAvatar:item.avaterUrl})}
-      title={item.name}
-      subTitle={item.email}
-      image={item.avaterUrl}
+          {
+            // console.log(item.matched)
+            //console.log(item.userID)
+            
+            // console.log(authentication.currentUser.uid)
+            // only display chats of users that are matched with the current user
+              return (
+                <ListItem 
+                  onPress={() => navigation.navigate('Task', {name:item.name, uid:item.userID, userAvatar:item.photoURL, email: item.email})}
+                  title={item.name}
+                  image={item.photoURL}
+                  />
+              )
+          }}
       />
-    }
-      />
+
+      
 
   </>
   </View>
@@ -75,6 +94,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     width: 100,
     marginBottom: 10, 
+    marginTop: 45,
+    marginLeft: 20
   },
   buttonText: {
     color: '#f6f6f6',
@@ -83,4 +104,14 @@ const styles = StyleSheet.create({
     fontSize: 14,
     textAlign: 'center',
   },
+  empty: {
+    flex: 1,
+    justifyContent: 'flex-start',
+    alignContent: 'center',
+    alignItems: 'center'
+  }, 
+  emptyText: {
+    fontSize: 24,
+    opacity: 0.5
+  }
 })

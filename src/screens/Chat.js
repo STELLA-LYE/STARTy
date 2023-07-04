@@ -1,14 +1,16 @@
 import { StyleSheet, Text, View, Button, ScrollView, TouchableOpacity} from 'react-native'
 import React, { useState, useCallback, useEffect } from 'react'
+import { useFocusEffect } from '@react-navigation/native';
 import { GiftedChat, Bubble, Send} from 'react-native-gifted-chat'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import { addDoc, collection, serverTimestamp , doc, onSnapshot, query, orderBy} from 'firebase/firestore';
+import { addDoc, collection, serverTimestamp , doc, onSnapshot, query, orderBy, getDoc} from 'firebase/firestore';
 import { db, authentication} from '../../config';
-// import { color } from 'react-native-reanimated';
 
 export default function Chat({route, navigation}) {
+  console.log('route ' + route);
   const uid = route.params.uid
+  console.log('user id ' + uid);
   const userAvatar = route.params.userAvatar
   const [messages, setMessages] = useState([]);
   const currentUser = authentication?.currentUser?.uid;
@@ -28,6 +30,21 @@ export default function Chat({route, navigation}) {
   //   ])
   // }, [])
 
+  //userAvatar 
+  const [photoURL, setPhotoURL] = useState(null);
+
+  const docRef = doc(db, "users", authentication.currentUser.email);
+  useFocusEffect(
+    useCallback(() => {
+        getDoc(docRef)
+            .then((doc) => {
+              setPhotoURL(doc.get('photoURL'))
+                console.log(Date.now())
+            })    
+     }, [])
+)
+
+//chat backend 
   useEffect(() => {
     const chatId = uid > currentUser ? `${uid + '-' + currentUser}` : `${currentUser + '-' + uid}`;
     const docref = doc(db, 'chatrooms', chatId);
@@ -77,8 +94,10 @@ export default function Chat({route, navigation}) {
       ...myMsg,
       createdAt:serverTimestamp(),
     })
-
   }, [])
+
+
+  //Chat UI 
 
   const scrollToBottomComponent = () => {
     return(
@@ -120,30 +139,25 @@ export default function Chat({route, navigation}) {
   };
 
 
+
   return (
     <View style={styles.container}>
 
-      {/* <Button style={styles.button}
-        onPress={() => navigation.navigate('MainTabs')}
+      {/* <Button
+        onPress={() => navigation.navigate('Home')}
         title='back'
         /> */}
-
-      <TouchableOpacity onPress={() => navigation.navigate('MainTabs')}>
-            <View style={styles.button}>
-                <Text style={styles.buttonText}>back</Text>
-            </View>
-        </TouchableOpacity>
-
 
     <GiftedChat
       messages={messages}
       onSend={text => onSend(text)}
-      showAvatarForEveryMessage={false}
-      showUserAvatar={false}
+      showAvatarForEveryMessage={true}
+      showUserAvatar={true}
       user={{
         _id: currentUser,
-        avatar: userAvatar, 
+        avatar: photoURL, 
       }}
+
       renderSend={renderSend}
       renderBubble={renderBubble}
       alwaysShowSend
@@ -162,22 +176,7 @@ const styles = StyleSheet.create({
       backgroundColor: '#eef1e1', 
       marginBottom: 20, 
   },
-  button: {
-    borderRadius: 100,
-    backgroundColor: '#5372F0',
-    //position: 'centre',
-    //left: 108,
-    justifyContent: 'center',
-    width: 80,
-    height: 40, 
-    marginBottom: 10, 
-    marginLeft: 175, 
-  },
-  buttonText: {
-    color: '#f6f6f6',
-    fontWeight: 'bold',
-    // fontFamily: 'RowdiesRegular', 
-    fontSize: 18,
-    textAlign: 'center',
-  },
+  btn:{
+      marginTop:10
+  }
 })

@@ -1,16 +1,3 @@
-// import { View, Text } from 'react-native'
-// import React from 'react'
-
-// const SessionUsers = () => {
-//   return (
-//     <View>
-//       <Text>SessionUsers</Text>
-//     </View>
-//   )
-// }
-
-// export default SessionUsers
-
 import React, { Component, useState } from 'react'
 import {
   StyleSheet,
@@ -21,36 +8,37 @@ import {
   Alert,
   TextInput,
   FlatList,
+  Platform,
 } from 'react-native'
 import { FontAwesome } from '@expo/vector-icons'; 
 import { SimpleLineIcons } from '@expo/vector-icons';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs'; 
-
-import Friends from '../components/SessionUsers/Friends'; 
-import Add from '../components/SessionUsers/Add'; 
-import Random from '../components/SessionUsers/Random'; 
+ 
+import random from '../components/sessionUsers/random'; 
+import friends from '../components/sessionUsers/friends';
+import Add from '../components/sessionUsers/add';
 
 export default function SessionUsers() {
 
   const focusSession = createMaterialTopTabNavigator();
 
-  return <focusSession.Navigator 
+  return <focusSession.Navigator testID='users'
             screenOptions={{
               tabBarLabelStyle: { fontSize: 14 },
               tabBarLabelStyle: { color: '#f6f6f6'},
-              tabBarStyle: { backgroundColor: '#007788', paddingTop: 50 }, 
-              
+              tabBarStyle: { backgroundColor: '#007788', paddingTop: (Platform.OS == 'ios') ? 60 : 20},
             }}
           >
 
-    <focusSession.Screen 
+    <focusSession.Screen       
+      testID='friendList'
       name='Friends' 
-      component={Friends} 
-      /> 
-
+      component={friends} 
+    />
+ 
     <focusSession.Screen 
       name='Random' 
-      component={Random}
+      component={random}
       />
 
     <focusSession.Screen 
@@ -59,4 +47,4 @@ export default function SessionUsers() {
       />
 
   </focusSession.Navigator>
-}
+} 
